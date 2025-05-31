@@ -1,6 +1,4 @@
 import express from 'express';
-import jwt from "jsonwebtoken";
-const { sign } = jwt;
 import { signup, login, updateProfile, checkAuth } from '../controllers/userController.js';
 import { protectRoute } from '../middleware/auth.js';
 

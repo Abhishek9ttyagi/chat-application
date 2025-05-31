@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { min } from "three/tsl";
 
 const userSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
