@@ -18,7 +18,7 @@ export const io = new Server(server, {
     }
 })
 
-export const userScoketMap = {}; // {userId: socketId}
+export const userSocketMap = {}; // {userId: socketId}
 
 // Handle socket connection
 io.on("connection", (socket) => {
