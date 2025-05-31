@@ -7,7 +7,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 //Signup a new user
 export const signup = async (req, res) => {
-    const {email, fullName, password} = req.body;
+    const {email, fullName, password } = req.body;
     try {
         if(!email || !fullName || !password || !bio) {
             return res.json({success: false, message: "Please fill all the fields"});

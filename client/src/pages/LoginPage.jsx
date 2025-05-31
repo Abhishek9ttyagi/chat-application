@@ -1,6 +1,6 @@
-import React, { useState , useState } from "react";
+import React, { useState, useContext } from "react";
 import assets from "../assets/assets";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState("Sign up");
@@ -10,16 +10,21 @@ const LoginPage = () => {
   const [bio, setBio] = useState("");
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if(currState === "Sign up" && !isDataSubmitted){ 
+    if (currState === "Sign up" && !isDataSubmitted) {
       setIsDataSubmitted(true);
       return;
     }
-    login(currState==="Sign up"?'signup':'login' ,{fullName, email, password, bio});
-}
+    // login(currState==="Sign up"?'signup':'login' ,{fullName, email, password, bio});
+    if (currState === "Sign up") {
+      login("signup", { fullName, email, password, bio });
+    } else {
+      login("login", { email, password });
+    }
+  };
 
   return (
     <div
@@ -30,16 +35,21 @@ const LoginPage = () => {
       <img src={assets.logo_big} alt="" className="w-[min(30vw,250px)]" />
 
       {/* right */}
-      <form onSubmit= {onSubmitHandler}
+      <form
+        onSubmit={onSubmitHandler}
         className="border-2 bg-white/8 text-white border-gray-500 p-6 flex flex-col
     gap-6 rounded-lg shadow-lg"
       >
         <h2 className="font-medium text-2xl flex justify-between items-center">
           {currState}
-          {isDataSubmitted && 
-          
-          <img onClick={()=>setIsDataSubmitted(false)} src={assets.arrow_icon} alt="" className="w-5 cursor-pointer" />
-          }
+          {isDataSubmitted && (
+            <img
+              onClick={() => setIsDataSubmitted(false)}
+              src={assets.arrow_icon}
+              alt=""
+              className="w-5 cursor-pointer"
+            />
+          )}
         </h2>
         {currState === "Sign up" && !isDataSubmitted && (
           <input
@@ -98,11 +108,26 @@ const LoginPage = () => {
         <div className="flex flex-col gap-2">
           {currState === "Sign up" ? (
             <p className="text-sm text-gray-600">
-              Already have an account? <span onClick={()=>{setCurrState("Login"); setIsDataSubmitted(false)}} className="font-medium text-violet-500 cursor-pointer">Login here</span>
+              Already have an account?{" "}
+              <span
+                onClick={() => {
+                  setCurrState("Login");
+                  setIsDataSubmitted(false);
+                }}
+                className="font-medium text-violet-500 cursor-pointer"
+              >
+                Login here
+              </span>
             </p>
           ) : (
             <p className="text-sm text-gray-600">
-              Create an account <span onClick={()=>setCurrState("Sign up")} className="font-medium text-violet-500 cursor-pointer">Click here</span>
+              Create an account{" "}
+              <span
+                onClick={() => setCurrState("Sign up")}
+                className="font-medium text-violet-500 cursor-pointer"
+              >
+                Click here
+              </span>
             </p>
           )}
         </div>

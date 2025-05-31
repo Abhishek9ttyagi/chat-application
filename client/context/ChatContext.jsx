@@ -90,7 +90,7 @@ export const ChatProvider = ({ children }) => {
 
     const value = {
         messages, users, selectedUser , getUsers, getMessages, sendMessage, setSelectedUser,
-        unseenMessages, setUnseenMessagesn
+        unseenMessages, setUnseenMessages
     }
    
     return (
