@@ -7,7 +7,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 //Signup a new user
 export const signup = async (req, res) => {
-    const {email, fullName, password } = req.body;
+    const {email, fullName, password , bio } = req.body;
     try {
         if(!email || !fullName || !password || !bio) {
             return res.json({success: false, message: "Please fill all the fields"});
@@ -42,6 +42,8 @@ export const login = async (req, res) => {
             return res.json({success: false, message: "Invalid credentials"});
         }
         const token = generateToken(user._id);
+        const userData = user.toObject();
+        delete userData.password;
         res.json({success: true, userData, token, message: "User logged in successfully"});
     } catch (error) {
         console.error(error.message);
@@ -58,20 +60,21 @@ export const checkAuth = (req,res)=>{
 // controller to update user profile details
 export const updateProfile = async (req, res) => {
     try {
-        const {profilepic, bio, fullName} = req.body;
+        const {profilePic, bio, fullName} = req.body;
         const userId = req.user._id;
         let updatedUser;
-        if(!profilepic) {
+        if(!profilePic) {
             updatedUser = await User.findByIdAndUpdate(userId, {bio, fullName}, {new: true});
         }
         else {
-            upload = await cloudinary.uploader.upload(profilepic, {
+            const imageData = `data:image/jpeg;base64,${profilePic}`;
+            const upload = await cloudinary.uploader.upload(imageData, {
                 folder: "HEART-CHAT",
                 width: 150,
                 height: 150,
                 crop: "fill"
             });
-            updatedUser = await User.findByIdAndUpdate(userId, {profilepic:upload.secure_url, bio, fullName}, {new: true});
+            updatedUser = await User.findByIdAndUpdate(userId, {profilePic:upload.secure_url, bio, fullName}, {new: true});
         }
         res.json({success: true, user: updatedUser, message: "Profile updated successfully"});
     } catch (error) {

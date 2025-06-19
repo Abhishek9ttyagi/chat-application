@@ -5,28 +5,33 @@ import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 
 const ChatContainer = () => {
-  const {messages, selectedUser , setSelectedUser , sendMessages , getMessages} = useContext(ChatContext);
+  const {messages, selectedUser , setSelectedUser , sendMessage , getMessages} = useContext(ChatContext);
   const {authUser, onlineUsers} = useContext(AuthContext);
   const scrollEnd = useRef();
   const [input, setInput] = useState('');
   // handle sending a message
   const handleSendMessage = async (e) =>{
     e.preventDefault();
-    if(input.trim()==="") return null;
-    await sendMessages({text:input.trim()});
+    // if(input.trim()==="") return null;
+    // await sendMessage({text:input.trim()});
+    // setInput("");
+    if (!input.trim()) return;
+    // sendMessage({ text: input });
+    console.log("Sending message:", input); // Debug
+    await sendMessage({ text: input });
     setInput("");
   }
 
   //Handle Sending an image
   const handleSendImage = async(e) =>{
     const file = e.target.files[0];
-    if(!file || !file.type.startWith("image/")){
+    if(!file || !file.type.startsWith("image/")){
       toast.error("select an image file");
       return;
     }
     const reader = new FileReader();
     reader.onloadend = async()=>{
-      await sendMessages({image:reader.result})
+      await sendMessage({image:reader.result})
       e.target.value= "";
     }
     reader.readAsDataURL(file);
@@ -49,7 +54,7 @@ const ChatContainer = () => {
       {/* header here */}
       <div className="flex items-center gap-3 py-3 mx-4 border-b border-stone-500">
         <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-8 rounded-full" />
-        <p className="flex-1 text-lg text-while flex items-center gap-2">
+        <p className="flex-1 text-lg text-white flex items-center gap-2">
           {selectedUser.fullName}
           {onlineUsers.includes(selectedUser._id) && <span className="w-2 h-2 rounded-full bg-green-500"></span>}
         </p>

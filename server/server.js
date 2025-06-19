@@ -25,27 +25,29 @@ io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
     console.log(`User connected: ${userId}`);
     if(userId) {
-        userScoketMap[userId] = socket.id; // Map userId to socketId
+        userSocketMap[userId] = socket.id; // Map userId to socketId
     }
     //Emit online users to all the connected clients
-    io.emit("getOnlineUsers", Object.keys(userScoketMap));
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
     // Handle user disconnection
     socket.on("disconnect", () => {
         console.log(`User disconnected: ${userId}`);
-        delete userScoketMap[userId]; // Remove userId from socket map
-        io.emit("getOnlineUsers", Object.keys(userScoketMap)); // Emit updated online users
+        delete userSocketMap[userId]; // Remove userId from socket map
+        io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Emit updated online users
     });
 });
 
 // Middleware
-app.use(express.json({limit: '5mb'}));
+// app.use(express.json({limit: '5mb'}));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors());
 
 // Routes setup
 app.use("/api/status", (req, res) => res.send("Server is running!"));
 app.use("/api/auth", userRouter);
-app.use("api/messages",messageRouter);
+app.use("/api/messages",messageRouter);
 
 //connect to MongoDB
 await connectDB();
