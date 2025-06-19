@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import assets, { imagesDummyData } from "../assets/assets";
-import { div } from "three/tsl";
 import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 
