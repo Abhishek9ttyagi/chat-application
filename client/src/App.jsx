@@ -15,7 +15,7 @@ const App = () => {
 
 
   return (
-    <div style={{ backgroundImage: "url('bgImage.svg')" }} className="bg-contain">
+    <div style={{ backgroundImage: "url('/bgImage.svg')" }} className="bg-contain">
       <Toaster />
       <Routes>
         <Route path="/" element={authUser?<HomePage />: <Navigate to="/login"/>} />
