@@ -4,7 +4,7 @@ import assets from "../assets/assets";
 import { AuthContext } from "../../context/AuthContext";
 
 const ProfilePage = () => {
-  const { authUser, updateProfile } = useContext(AuthContext);
+  const { authUser, updateProfile, deleteAccount } = useContext(AuthContext);
   const [selectedImg, setSelectedImg] = useState(null);
   const navigate = useNavigate();
   const [name, setName] = useState(authUser.fullName);
@@ -75,6 +75,17 @@ const ProfilePage = () => {
             className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
           ></textarea>
           <button type="submit" className="bg-gradient-to-r from purple-400 to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer">Save</button>
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                deleteAccount();
+              }
+            }}
+            className="bg-red-600 text-white p-2 rounded-full text-lg cursor-pointer mt-2"
+          >
+            Delete Account
+          </button>
         </form>
         <img className={`max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10 ${selectedImg && 'rounded-full'}`} src={authUser?.profilePic || assets.logo_icon} alt="" />
       </div>

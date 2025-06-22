@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
-
+import Message from "../models/Message.js";
 
 //Signup a new user
 export const signup = async (req, res) => {
@@ -36,7 +36,9 @@ export const login = async (req, res) => {
     try {
         const {email, password} = req.body;
         const user = await User.findOne({email});
-        
+        if (!user) {
+            return res.json({success: false, message: "User not found"});
+        }
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if(!isPasswordCorrect) {
             return res.json({success: false, message: "Invalid credentials"});
@@ -80,5 +82,20 @@ export const updateProfile = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.json({success: false, message: error.message});
+    }
+};
+
+// Delete user account
+export const deleteAccount = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        // Delete user
+        await User.findByIdAndDelete(userId);
+        // Optionally, delete user's messages
+        await Message.deleteMany({ $or: [{ senderId: userId }, { receiverId: userId }] });
+        res.json({ success: true, message: "Account deleted successfully" });
+    } catch (error) {
+        console.error(error.message);
+        res.json({ success: false, message: error.message });
     }
 };
